@@ -4,4 +4,5 @@ using System;
 public class Choice {
     public string Description;
     public string ThumbnailLinkId;
+    public bool IsEndingChoice;
 }

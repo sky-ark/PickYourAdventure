@@ -9,6 +9,7 @@ public class ThumbnailUI : MonoBehaviour {
     [Header("References")]
     public Image Image;
     public TMP_Text Description;
+    public GameObject StoryPanel;
     public Transform ChoiceContent;
 
     private Story _story;
@@ -27,6 +28,12 @@ public class ThumbnailUI : MonoBehaviour {
             GameObject instantiate = Instantiate(ButtonChoicePrefab, ChoiceContent);
             instantiate.GetComponentInChildren<TMP_Text>().text = choice.Description;
             instantiate.GetComponent<Button>().onClick.AddListener(() => {
+                if (choice.IsEndingChoice)
+                {
+                    Debug.Log($"The End of the story: {_story.StoryName}");
+                    StoryPanel.SetActive(false);
+                    return;
+                }
                 Thumbnail linkedThumbnail = _story.Thumbnails.Find(t => t.Id == choice.ThumbnailLinkId);
                 LoadThumbnail(linkedThumbnail);
             });
