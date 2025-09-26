@@ -9,27 +9,24 @@ public class CreateAdventure : MonoBehaviour
     [Header("Panels & Containers")]
     public GameObject StoryNamePanel;
     public GameObject ThumbnailsPanel;
-    public InputField StoryNameInputField;
-    public InputField StartingThumbnailInputField;
+    public TMP_InputField StoryNameInputField;
     public Transform ThumbnailsContainer;
     public GameObject ThumbnailInputPrefab;
 
     [Header("Actions")]
-    public Button AddThumbnailButton;
-    public Button SaveStoryButton;
-
+    public Button ValidateNameButton;
+    
     private List<ThumbnailInputLine> thumbnailLines = new List<ThumbnailInputLine>();
 
     void Start()
     {
-        AddThumbnailButton.onClick.AddListener(OnAddThumbnailClicked);
-        SaveStoryButton.onClick.AddListener(OnSaveTheStoryClicked);
+        ValidateNameButton.onClick.AddListener(OnNameValidationClicked);
     }
 
     public void OnNameValidationClicked()
     {
         StoryNamePanel.SetActive(false);
-        ThumbnailsPanel.SetActive(true);
+        OnAddThumbnailClicked();
     }
 
     public void OnAddThumbnailClicked()
@@ -50,7 +47,6 @@ public class CreateAdventure : MonoBehaviour
     {
         Story story = new Story();
         story.StoryName = StoryNameInputField.text;
-        story.StartingThumbnailId = StartingThumbnailInputField.text;
         story.Thumbnails = new List<Thumbnail>();
 
         string storyFolder = Path.Combine(Application.persistentDataPath, story.StoryName);
@@ -60,15 +56,15 @@ public class CreateAdventure : MonoBehaviour
         // Préparation des thumbnails
         foreach (var til in thumbnailLines)
         {
-            Thumbnail t = new Thumbnail();
-            t.Id = til.IdInput.text;
-            t.Description = til.DescriptionInput.text;
-            t.Choices = til.GetChoices();
+            Thumbnail thumbnail = new Thumbnail();
+            thumbnail.Id = til.IdInput.text;
+            thumbnail.Description = til.DescriptionInput.text;
+            thumbnail.Choices = til.GetChoices();
 
             // Gestion image (sauvegarde PNG)
             if (til.ThumbnailImage.sprite != null)
             {
-                t.Image = til.ThumbnailImage.sprite;
+                thumbnail.Image = til.ThumbnailImage.sprite;
                 // Sauver l'image
                 Texture2D tex = til.ThumbnailImage.sprite.texture;
                 Texture2D readableTex = new Texture2D(tex.width, tex.height, TextureFormat.RGBA32, false);
@@ -81,13 +77,15 @@ public class CreateAdventure : MonoBehaviour
                 RenderTexture.ReleaseTemporary(rt);
 
                 byte[] imageBytes = readableTex.EncodeToPNG();
-                string imagePath = Path.Combine(storyFolder, t.Id + ".png");
+                string imagePath = Path.Combine(storyFolder, thumbnail.Id + ".png");
                 File.WriteAllBytes(imagePath, imageBytes);
                 DestroyImmediate(readableTex);
             }
 
-            story.Thumbnails.Add(t);
+            story.Thumbnails.Add(thumbnail);
         }
+        if (story.Thumbnails.Count > 0)
+            story.StartingThumbnailId = story.Thumbnails[0].Id;
 
         // Sauvegarde JSON
         string json = JsonUtility.ToJson(story, true);
