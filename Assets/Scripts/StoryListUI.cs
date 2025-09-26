@@ -1,4 +1,5 @@
 using System.Collections;
+using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -24,6 +25,25 @@ public class StoryListUI : MonoBehaviour
                 gameManager.ThumbnailUI.Setup(story);
                 StoryPanel.SetActive(true);
             });
+            Button deleteButton = storyButton.transform.Find("DeleteButton").GetComponent<Button>();
+            if (deleteButton != null)
+            {
+                deleteButton.onClick.AddListener(() =>
+                {
+                    DeleteStory(story);
+                    Destroy(storyButton);
+                });
+            }
         }
+    }
+    
+    void DeleteStory(Story story)
+    {
+        string storyFolder = Path.Combine(Application.persistentDataPath, story.StoryName);
+        if (Directory.Exists(storyFolder))
+        {
+            Directory.Delete(storyFolder, true);
+        }
+        gameManager.stories.Remove(story);
     }
 }

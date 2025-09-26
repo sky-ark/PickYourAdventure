@@ -14,7 +14,6 @@ public class ThumbnailInputLine : MonoBehaviour
     public GameObject ChoiceInputPrefab;
     public Button AddThumbnailButton;
     public Button AddChoiceButton;
-    public Button SaveStoryButton;
 
     private List<ChoiceInputLine> choiceLines = new List<ChoiceInputLine>();
     private CreateAdventure parent;
@@ -26,7 +25,6 @@ public class ThumbnailInputLine : MonoBehaviour
         AddThumbnailButton.onClick.AddListener(parent.OnAddThumbnailClicked);
         AddChoiceButton.onClick.AddListener(AddChoice);
         SelectImageButton.onClick.AddListener(SelectImage);
-        SaveStoryButton.onClick.AddListener(parent.OnSaveTheStoryClicked);
     }
 
     public void AddChoice()

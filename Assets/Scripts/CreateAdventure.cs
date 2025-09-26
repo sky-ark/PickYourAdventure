@@ -15,12 +15,14 @@ public class CreateAdventure : MonoBehaviour
 
     [Header("Actions")]
     public Button ValidateNameButton;
+    public Button SaveTheStoryButton;
     
     private List<ThumbnailInputLine> thumbnailLines = new List<ThumbnailInputLine>();
 
     void Start()
     {
         ValidateNameButton.onClick.AddListener(OnNameValidationClicked);
+        SaveTheStoryButton.onClick.AddListener(OnSaveTheStoryClicked);
     }
 
     public void OnNameValidationClicked()
