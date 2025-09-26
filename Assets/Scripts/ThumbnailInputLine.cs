@@ -32,6 +32,7 @@ public class ThumbnailInputLine : MonoBehaviour
        GameObject obj = Instantiate(ChoiceInputPrefab, ChoicesContainer);
        ChoiceInputLine cil = obj.GetComponent<ChoiceInputLine>();
        cil.Setup(this);
+       choiceLines.Add(cil);
     }
 
     public void RemoveChoiceLine(ChoiceInputLine line)

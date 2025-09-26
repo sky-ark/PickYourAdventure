@@ -7,8 +7,11 @@ using System.IO;
 public class CreateAdventure : MonoBehaviour
 {
     [Header("Panels & Containers")]
+    public GameObject CreateAdventurePanel;
+    public GameObject MainMenuPanel;
     public GameObject StoryNamePanel;
     public GameObject ThumbnailsPanel;
+    public GameObject StorySavedPanel;
     public TMP_InputField StoryNameInputField;
     public Transform ThumbnailsContainer;
     public GameObject ThumbnailInputPrefab;
@@ -16,6 +19,7 @@ public class CreateAdventure : MonoBehaviour
     [Header("Actions")]
     public Button ValidateNameButton;
     public Button SaveTheStoryButton;
+    public Button QuitStoryCreationButton;
     
     private List<ThumbnailInputLine> thumbnailLines = new List<ThumbnailInputLine>();
 
@@ -23,6 +27,7 @@ public class CreateAdventure : MonoBehaviour
     {
         ValidateNameButton.onClick.AddListener(OnNameValidationClicked);
         SaveTheStoryButton.onClick.AddListener(OnSaveTheStoryClicked);
+        QuitStoryCreationButton.onClick.AddListener(OnQuitStoryCreationClicked);
     }
 
     public void OnNameValidationClicked()
@@ -96,5 +101,21 @@ public class CreateAdventure : MonoBehaviour
         File.WriteAllText(jsonPath, json);
 
         Debug.Log($"Story '{story.StoryName}' saved with {story.Thumbnails.Count} thumbnails.");
+        StorySavedPanel.SetActive(true);
+    }
+    
+    public void OnQuitStoryCreationClicked()
+    {
+        ThumbnailsPanel.SetActive(false);
+        StorySavedPanel.SetActive(false);
+        foreach (var line in thumbnailLines)
+        {
+            Destroy(line.gameObject);
+        }
+        thumbnailLines.Clear();
+        StoryNameInputField.text = "";
+        MainMenuPanel.SetActive(true); 
+        CreateAdventurePanel.SetActive(false);
+
     }
 }
