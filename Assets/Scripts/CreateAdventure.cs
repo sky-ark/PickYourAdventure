@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -28,6 +29,11 @@ public class CreateAdventure : MonoBehaviour
         ValidateNameButton.onClick.AddListener(OnNameValidationClicked);
         SaveTheStoryButton.onClick.AddListener(OnSaveTheStoryClicked);
         QuitStoryCreationButton.onClick.AddListener(OnQuitStoryCreationClicked);
+    }
+
+    private void OnEnable()
+    {
+        StoryNamePanel.SetActive(true);
     }
 
     public void OnNameValidationClicked()
@@ -106,7 +112,6 @@ public class CreateAdventure : MonoBehaviour
     
     public void OnQuitStoryCreationClicked()
     {
-        ThumbnailsPanel.SetActive(false);
         StorySavedPanel.SetActive(false);
         foreach (var line in thumbnailLines)
         {
@@ -116,6 +121,5 @@ public class CreateAdventure : MonoBehaviour
         StoryNameInputField.text = "";
         MainMenuPanel.SetActive(true); 
         CreateAdventurePanel.SetActive(false);
-
     }
 }

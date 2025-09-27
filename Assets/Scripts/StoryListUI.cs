@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.IO;
 using TMPro;
@@ -12,8 +13,21 @@ public class StoryListUI : MonoBehaviour
     public Transform storiesPanel;
 
     public GameObject StoryPanel;
+    public GameObject MainMenuPanel;
+    public Button BackToMenuButton;
 
     void Start()
+    {
+        BackToMenuButton.onClick.AddListener(() =>
+        {
+            StoryPanel.SetActive(false);
+            MainMenuPanel.SetActive(true);
+            this.gameObject.SetActive(false);
+        });
+        
+    }
+
+    private void OnEnable()
     {
         gameManager.LoadAllStories();
         foreach (var story in gameManager.stories)
@@ -36,7 +50,7 @@ public class StoryListUI : MonoBehaviour
             }
         }
     }
-    
+
     void DeleteStory(Story story)
     {
         string storyFolder = Path.Combine(Application.persistentDataPath, story.StoryName);

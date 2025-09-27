@@ -21,8 +21,8 @@ public class ThumbnailUI : MonoBehaviour {
     }
 
     private void LoadThumbnail(Thumbnail thumbnail) {
-        Image.sprite = thumbnail.Image;
-        Description.text = thumbnail.Description;
+        if(Image.sprite) Image.sprite = thumbnail.Image;
+        if(Description != null) Description.text = thumbnail.Description;
         ClearChoices();
         foreach (Choice choice in thumbnail.Choices) {
             GameObject instantiate = Instantiate(ButtonChoicePrefab, ChoiceContent);
