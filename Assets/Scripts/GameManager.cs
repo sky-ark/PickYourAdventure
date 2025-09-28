@@ -96,6 +96,7 @@ public class GameManager : MonoBehaviour
                         texture.LoadImage(imageBytes);
                         Rect rect = new Rect(0, 0, texture.width, texture.height);
                         thumbnail.Image = Sprite.Create(texture, rect, new Vector2(0.5f, 0.5f));
+                        Debug.Log($"Loaded image for thumbnail {thumbnail.Id} from {imagePath}");
                     }
                     else
                     {

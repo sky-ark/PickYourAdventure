@@ -21,7 +21,18 @@ public class ThumbnailUI : MonoBehaviour {
     }
 
     private void LoadThumbnail(Thumbnail thumbnail) {
-        if(Image.sprite) Image.sprite = thumbnail.Image;
+        if (thumbnail.Image != null)
+        {
+            Image.sprite = thumbnail.Image;
+            Image.enabled = true;
+            Debug.Log($"ThumbnailUI: Affiche image {thumbnail.Id}");
+        }
+        else
+        {
+            Image.sprite = null;
+            Image.enabled = false;
+            Debug.LogWarning($"ThumbnailUI: Image is null for thumbnail {thumbnail.Id}");
+        }
         if(Description != null) Description.text = thumbnail.Description;
         ClearChoices();
         foreach (Choice choice in thumbnail.Choices) {

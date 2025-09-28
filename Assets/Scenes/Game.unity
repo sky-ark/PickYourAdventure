@@ -911,7 +911,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.15}
   m_AnchorMax: {x: 1, y: 0.8}
-  m_AnchoredPosition: {x: 8.5, y: 40.95996}
+  m_AnchoredPosition: {x: 8.5, y: 40.9599}
   m_SizeDelta: {x: 17, y: -1054.9601}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &403480329
@@ -3809,7 +3809,6 @@ GameObject:
   - component: {fileID: 1221977506}
   - component: {fileID: 1221977510}
   - component: {fileID: 1221977509}
-  - component: {fileID: 1221977508}
   - component: {fileID: 1221977507}
   m_Layer: 5
   m_Name: StoryPanel
@@ -3857,32 +3856,6 @@ MonoBehaviour:
   Description: {fileID: 840251422}
   StoryPanel: {fileID: 1221977505}
   ChoiceContent: {fileID: 1525445657}
---- !u!114 &1221977508
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1221977505}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.VerticalLayoutGroup
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 4
-  m_Spacing: 0
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
-  m_ChildScaleWidth: 0
-  m_ChildScaleHeight: 0
-  m_ReverseArrangement: 0
 --- !u!114 &1221977509
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5956,7 +5929,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c390be34669d11c42b26c7406e41b9c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  stories: []
+  stories:
+  - StoryName: Editor
+    StartingThumbnailId: EditorTest
+    Thumbnails:
+    - Id: EditorTest
+      Image: {fileID: -2872694499965855817, guid: ec5956a1af77826428c2ecb83536a565, type: 3}
+      Description: Tu vois une moto
+      Choices:
+      - Description: partir avec
+        ThumbnailLinkId: PNG
+        IsEndingChoice: 0
+    - Id: PNG
+      Image: {fileID: -5325690230357092924, guid: 858caf76d2b37214aaae308433bc2e16, type: 3}
+      Description: tu vois un arbre
+      Choices:
+      - Description: partir
+        ThumbnailLinkId: partir
+        IsEndingChoice: 1
   ThumbnailUI: {fileID: 1221977507}
 --- !u!4 &1897923609
 Transform:
