@@ -29,6 +29,11 @@ public class StoryListUI : MonoBehaviour
 
     private void OnEnable()
     {
+        // Delete previous buttons
+        foreach (Transform child in storiesPanel)
+        {
+            Destroy(child.gameObject);
+        }
         gameManager.LoadAllStories();
         foreach (var story in gameManager.stories)
         {
