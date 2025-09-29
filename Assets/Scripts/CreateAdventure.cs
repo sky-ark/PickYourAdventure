@@ -77,7 +77,6 @@ public class CreateAdventure : MonoBehaviour
             // Gestion image (sauvegarde PNG)
             if (til.ThumbnailImage.sprite != null)
             {
-                thumbnail.Image = til.ThumbnailImage.sprite;
                 // Sauver l'image
                 Texture2D tex = til.ThumbnailImage.sprite.texture;
                 Texture2D readableTex = new Texture2D(tex.width, tex.height, TextureFormat.RGBA32, false);
@@ -91,6 +90,7 @@ public class CreateAdventure : MonoBehaviour
 
                 byte[] imageBytes = readableTex.EncodeToPNG();
                 string imagePath = Path.Combine(storyFolder, thumbnail.Id + ".png");
+                thumbnail.ImageName = thumbnail.Id; 
                 File.WriteAllBytes(imagePath, imageBytes);
                 DestroyImmediate(readableTex);
             }

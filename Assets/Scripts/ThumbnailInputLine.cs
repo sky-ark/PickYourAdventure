@@ -50,7 +50,6 @@ public class ThumbnailInputLine : MonoBehaviour
             {
                 Description = line.ChoiceDescriptionInput.text,
                 ThumbnailLinkId = line.ChoiceThumbnailLinkIdInput.text,
-                IsEndingChoice = line.IsEndingChoiceToggle.isOn
             };
             result.Add(choice);
         }

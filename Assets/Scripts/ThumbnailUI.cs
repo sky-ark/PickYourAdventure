@@ -1,3 +1,4 @@
+using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,9 +22,10 @@ public class ThumbnailUI : MonoBehaviour {
     }
 
     private void LoadThumbnail(Thumbnail thumbnail) {
-        if (thumbnail.Image != null)
+        if (thumbnail.ImageName != null)
         {
-            Image.sprite = thumbnail.Image;
+            Sprite sprite = LoadSprite(thumbnail.ImageName);
+            Image.sprite = sprite;
             Image.enabled = true;
             Debug.Log($"ThumbnailUI: Affiche image {thumbnail.Id}");
         }
@@ -39,18 +41,31 @@ public class ThumbnailUI : MonoBehaviour {
             GameObject instantiate = Instantiate(ButtonChoicePrefab, ChoiceContent);
             instantiate.GetComponentInChildren<TMP_Text>().text = choice.Description;
             instantiate.GetComponent<Button>().onClick.AddListener(() => {
-                if (choice.IsEndingChoice)
-                {
-                    Debug.Log($"The End of the story: {_story.StoryName}");
-                    StoryPanel.SetActive(false);
-                    return;
-                }
+                // if (choice.IsEndingChoice)
+                // {
+                //     Debug.Log($"The End of the story: {_story.StoryName}");
+                //     StoryPanel.SetActive(false);
+                //     return;
+                // }
+                
+                // Verify there's another choice linked
                 Thumbnail linkedThumbnail = _story.Thumbnails.Find(t => t.Id == choice.ThumbnailLinkId);
                 LoadThumbnail(linkedThumbnail);
             });
         }
     }
 
+    private Sprite LoadSprite(string imageName)
+    {
+        string imagePath = Path.Combine(Application.persistentDataPath, imageName + ".png");
+        if (!File.Exists(imagePath)) return null;
+        byte[] imageBytes = File.ReadAllBytes(imagePath);
+        Texture2D texture = new Texture2D(2, 2);
+        if(!texture.LoadImage(imageBytes)) return null;
+        Rect rect = new Rect(0, 0, texture.width, texture.height);
+        return Sprite.Create(texture, rect, new Vector2(0.5f, 0.5f));
+    }
+    
     private void ClearChoices() {
         foreach (Transform child in ChoiceContent) {
             Destroy(child.gameObject);

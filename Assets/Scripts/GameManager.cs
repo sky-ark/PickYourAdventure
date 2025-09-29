@@ -38,9 +38,11 @@ public class GameManager : MonoBehaviour
         File.WriteAllText(Path.Combine(filePath), json);
         foreach (var thumbnail in  story.Thumbnails)
         {
-            if (thumbnail.Image != null)
+            if (thumbnail.ImageName != null)
             {
-                Texture2D source = thumbnail.Image.texture;
+                string imageToLoadPath = Path.Combine(storyFolder, thumbnail.ImageName);
+                //Sprite image = Resources.Load<Sprite>(Path.GetFileName(thumbnail.ImageName));
+                Texture2D source = image.texture;
                 // Create a readable copy of the texture if it's not readable
                 Texture2D readableTex = new Texture2D(source.width, source.height, TextureFormat.RGBA32, false);
                 RenderTexture rt = RenderTexture.GetTemporary(source.width, source.height);
@@ -86,23 +88,26 @@ public class GameManager : MonoBehaviour
             {
                 string json = File.ReadAllText(jsonPath);
                 Story story = JsonUtility.FromJson<Story>(json);
-                foreach (var thumbnail in story.Thumbnails)
-                {
-                    string imagePath = Path.Combine(storyFolder, thumbnail.Id + ".png");
-                    if (File.Exists(imagePath))
-                    {
-                        byte[] imageBytes = File.ReadAllBytes(imagePath);
-                        Texture2D texture = new Texture2D(2, 2);
-                        texture.LoadImage(imageBytes);
-                        Rect rect = new Rect(0, 0, texture.width, texture.height);
-                        thumbnail.Image = Sprite.Create(texture, rect, new Vector2(0.5f, 0.5f));
-                        Debug.Log($"Loaded image for thumbnail {thumbnail.Id} from {imagePath}");
-                    }
-                    else
-                    {
-                        Debug.LogWarning($"Image file not found: {imagePath}");
-                    }
-                }
+                
+                //  Load images needs to be done when the story is loaded in the UI
+                // foreach (var thumbnail in story.Thumbnails)
+                // {
+                //     string imagePath = Path.Combine(storyFolder, thumbnail.Id + ".png");
+                //     if (File.Exists(imagePath))
+                //     {
+                //         byte[] imageBytes = File.ReadAllBytes(imagePath);
+                //         Texture2D texture = new Texture2D(2, 2);
+                //         texture.LoadImage(imageBytes);
+                //         Rect rect = new Rect(0, 0, texture.width, texture.height);
+                //         Sprite image = Sprite.Create(texture, rect, new Vector2(0.5f, 0.5f));
+                //         thumbnail.ImageName = image.name;
+                //         Debug.Log($"Loaded image for thumbnail {thumbnail.Id} from {imagePath}");
+                //     }
+                //     else
+                //     {
+                //         Debug.LogWarning($"Image file not found: {imagePath}");
+                //     }
+                // }
                 stories.Add(story);
                 Debug.Log($"Loaded story: {story.StoryName} from {jsonPath}");
             }
