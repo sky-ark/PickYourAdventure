@@ -40,23 +40,34 @@ public class GameManager : MonoBehaviour
         {
             if (thumbnail.ImageName != null)
             {
-                string imageToLoadPath = Path.Combine(storyFolder, thumbnail.ImageName);
-                //Sprite image = Resources.Load<Sprite>(Path.GetFileName(thumbnail.ImageName));
-                Texture2D source = image.texture;
-                // Create a readable copy of the texture if it's not readable
-                Texture2D readableTex = new Texture2D(source.width, source.height, TextureFormat.RGBA32, false);
-                RenderTexture rt = RenderTexture.GetTemporary(source.width, source.height);
-                Graphics.Blit(source, rt);
-                RenderTexture.active = rt;
-                readableTex.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
-                readableTex.Apply();
-                RenderTexture.active = null;
-                RenderTexture.ReleaseTemporary(rt);
-
-                byte[] imageBytes = readableTex.EncodeToPNG();
                 string imagePath = Path.Combine(storyFolder, thumbnail.Id + ".png");
-                File.WriteAllBytes(imagePath, imageBytes);
-                Object.DestroyImmediate(readableTex);
+                if (File.Exists(imagePath))
+                {
+                    Debug.Log($"Image for thumbnail {thumbnail.Id} already exists at {imagePath}");
+                    continue; // Skip saving if the image already exists
+                }
+                Sprite sprite = ThumbnailUI.LoadSprite(thumbnail.ImageName);
+                if (sprite != null)
+                {
+                    Texture2D tex = sprite.texture;
+                    Texture2D readableTex = new Texture2D(tex.width, tex.height, TextureFormat.RGBA32, false);
+                    RenderTexture rt = RenderTexture.GetTemporary(tex.width, tex.height);
+                    Graphics.Blit(tex, rt);
+                    RenderTexture.active = rt;
+                    readableTex.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
+                    readableTex.Apply();
+                    RenderTexture.active = null;
+                    RenderTexture.ReleaseTemporary(rt);
+
+                    byte[] imageBytes = readableTex.EncodeToPNG();
+                    File.WriteAllBytes(imagePath, imageBytes);
+                    DestroyImmediate(readableTex);
+                    Debug.Log($"Saved image for thumbnail {thumbnail.Id} at {imagePath}");
+                }
+                else
+                {
+                    Debug.LogWarning($"Could not load sprite for thumbnail {thumbnail.Id} with image name {thumbnail.ImageName}");
+                }
             }
         }
         }

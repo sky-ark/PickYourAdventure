@@ -22,7 +22,7 @@ public class ThumbnailUI : MonoBehaviour {
     }
 
     private void LoadThumbnail(Thumbnail thumbnail) {
-        if (thumbnail.ImageName != null)
+        if (!string.IsNullOrEmpty(thumbnail.ImageName))
         {
             Sprite sprite = LoadSprite(thumbnail.ImageName);
             Image.sprite = sprite;
@@ -41,21 +41,19 @@ public class ThumbnailUI : MonoBehaviour {
             GameObject instantiate = Instantiate(ButtonChoicePrefab, ChoiceContent);
             instantiate.GetComponentInChildren<TMP_Text>().text = choice.Description;
             instantiate.GetComponent<Button>().onClick.AddListener(() => {
-                // if (choice.IsEndingChoice)
-                // {
-                //     Debug.Log($"The End of the story: {_story.StoryName}");
-                //     StoryPanel.SetActive(false);
-                //     return;
-                // }
-                
-                // Verify there's another choice linked
+                if (string.IsNullOrEmpty(choice.ThumbnailLinkId))
+                {
+                    Debug.Log("End of the story");
+                    StoryPanel.SetActive(false);
+                    return;
+                }
                 Thumbnail linkedThumbnail = _story.Thumbnails.Find(t => t.Id == choice.ThumbnailLinkId);
                 LoadThumbnail(linkedThumbnail);
             });
         }
     }
 
-    private Sprite LoadSprite(string imageName)
+    public Sprite LoadSprite(string imageName)
     {
         string imagePath = Path.Combine(Application.persistentDataPath, imageName + ".png");
         if (!File.Exists(imagePath)) return null;
