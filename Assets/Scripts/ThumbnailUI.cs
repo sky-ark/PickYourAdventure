@@ -27,7 +27,7 @@ public class ThumbnailUI : MonoBehaviour {
             Sprite sprite = LoadSprite(thumbnail.ImageName);
             Image.sprite = sprite;
             Image.enabled = true;
-            Debug.Log($"ThumbnailUI: Affiche image {thumbnail.Id}");
+            Image.preserveAspect = true;
         }
         else
         {
@@ -79,8 +79,12 @@ public class ThumbnailUI : MonoBehaviour {
 
     public Sprite LoadSprite(string imageName)
     {
-        string imagePath = Path.Combine(Application.persistentDataPath, imageName + ".png");
-        if (!File.Exists(imagePath)) return null;
+        string imagePath = Path.Combine(Application.persistentDataPath, _story.StoryName, imageName + ".png");
+        if (!File.Exists(imagePath))
+        {
+            Debug.Log("Image file not found at " + imagePath);
+            return null;
+        }
         byte[] imageBytes = File.ReadAllBytes(imagePath);
         Texture2D texture = new Texture2D(2, 2);
         if(!texture.LoadImage(imageBytes)) return null;
