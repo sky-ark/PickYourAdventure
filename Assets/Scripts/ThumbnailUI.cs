@@ -37,19 +37,43 @@ public class ThumbnailUI : MonoBehaviour {
         }
         if(Description != null) Description.text = thumbnail.Description;
         ClearChoices();
-        foreach (Choice choice in thumbnail.Choices) {
+        foreach (Choice choice in thumbnail.Choices)
+        {
             GameObject instantiate = Instantiate(ButtonChoicePrefab, ChoiceContent);
             instantiate.GetComponentInChildren<TMP_Text>().text = choice.Description;
-            instantiate.GetComponent<Button>().onClick.AddListener(() => {
-                if (string.IsNullOrEmpty(choice.ThumbnailLinkId))
+            bool accessible = InventoryManager.Instance.HasItem(choice.NeededItemsId);
+            Button btn = instantiate.GetComponent<Button>();
+            btn.interactable = accessible;
+
+            if (accessible)
+            {
+
+
+                btn.onClick.AddListener(() =>
                 {
-                    Debug.Log("End of the story");
-                    StoryPanel.SetActive(false);
-                    return;
+                    if (string.IsNullOrEmpty(choice.ThumbnailLinkId))
+                    {
+                        Debug.Log("End of the story");
+                        StoryPanel.SetActive(false);
+                        return;
+                    }
+
+                    Thumbnail linkedThumbnail = _story.Thumbnails.Find(t => t.Id == choice.ThumbnailLinkId);
+                    InventoryManager.Instance.AddItem(choice.GivenItemsId);
+                    InventoryManager.Instance.RemoveItem(choice.TakenItemsId);
+                    LoadThumbnail(linkedThumbnail);
+                });
+            }
+            else
+            {
+                TMP_Text btnText = instantiate.GetComponentInChildren<TMP_Text>();
+                if (btnText != null)
+                {
+                    btnText.text += " (Locked)";
+                    btnText.color = Color.gray;
                 }
-                Thumbnail linkedThumbnail = _story.Thumbnails.Find(t => t.Id == choice.ThumbnailLinkId);
-                LoadThumbnail(linkedThumbnail);
-            });
+                
+            }
         }
     }
 
