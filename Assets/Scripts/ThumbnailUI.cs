@@ -21,7 +21,7 @@ public class ThumbnailUI : MonoBehaviour {
         LoadThumbnail(firstThumbnail);
     }
 
-    private void LoadThumbnail(Thumbnail thumbnail) {
+    public void LoadThumbnail(Thumbnail thumbnail) {
         if (!string.IsNullOrEmpty(thumbnail.ImageName))
         {
             Sprite sprite = LoadSprite(thumbnail.ImageName);
