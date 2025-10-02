@@ -7,6 +7,7 @@ public class LoadSaveMenu : MonoBehaviour
     public GameObject LoadButtonPrefab;
     public Transform LoadButtonContainer;
     public ThumbnailUI thumbnailUI;
+    public GameObject StoryPanel;
 
     private void OnEnable()
     {
@@ -33,7 +34,7 @@ public class LoadSaveMenu : MonoBehaviour
             loadButtonObj.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() =>
             {
                 LoadStory(file);
-                this.gameObject.SetActive(false);
+                Debug.Log("Loaded story: " + storyName);
             });
         }
     }
@@ -49,9 +50,14 @@ public class LoadSaveMenu : MonoBehaviour
             string storyPath = Path.Combine(storyFolder, save.StoryName + ".json");
             string json = File.ReadAllText(storyPath);
             Story story = JsonUtility.FromJson<Story>(json);
+            StoryPanel.SetActive(true);
             thumbnailUI.Setup(story);
             Thumbnail startingThumbnail = story.Thumbnails.Find(t => t.Id == save.CurrentThumbnailId);
             thumbnailUI.LoadThumbnail(startingThumbnail);
+            this.gameObject.SetActive(false);
+        }
+        else {
+            Debug.LogError("Failed to load story progress.");
         }
     }
     

@@ -1,5 +1,8 @@
+using System;
 using System.IO;
+using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,8 +15,23 @@ public class ThumbnailUI : MonoBehaviour {
     public TMP_Text Description;
     public GameObject StoryPanel;
     public Transform ChoiceContent;
+    public Button SaveButton;
 
     private Story _story;
+
+    private void Start()
+    {
+        SaveButton.onClick.AddListener(() =>
+        {
+            if (_story == null)
+            {
+                Debug.LogError("No story loaded to save progress.");
+                return;
+            }
+            StoryProgressionManager.SaveProgress(_story.StoryName, _story.StartingThumbnailId, InventoryManager.Instance._items.ToList());
+            Debug.Log("Game progress saved.");
+        });
+    }
 
     public void Setup(Story story) {
         _story = story;
@@ -96,5 +114,10 @@ public class ThumbnailUI : MonoBehaviour {
         foreach (Transform child in ChoiceContent) {
             Destroy(child.gameObject);
         }
+    }
+
+    public void BackToMenu()
+    {
+        this.gameObject.SetActive(false);
     }
 }

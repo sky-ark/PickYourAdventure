@@ -5,6 +5,7 @@ public class MainMenu : MonoBehaviour
     public GameObject MainMenuPanel;
     public GameObject StoryPanel;
     public GameObject CreateAdventurePanel;
+    public GameObject LoadASavePanel;
     public void OnPlayButtonClicked()
     {
         MainMenuPanel.SetActive(false);
@@ -15,6 +16,12 @@ public class MainMenu : MonoBehaviour
     {
         MainMenuPanel.SetActive(false);
         CreateAdventurePanel.SetActive(true);
+    }
+
+    public void LoadASaveClicked()
+    {
+        MainMenuPanel.SetActive(false);
+        LoadASavePanel.SetActive(true);
     }
     public void OnQuitButtonClicked()
     {

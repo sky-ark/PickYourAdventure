@@ -14,7 +14,12 @@ public class StoryProgressionManager : MonoBehaviour
         };
         
         string json = JsonUtility.ToJson(saveData, true);
-        string path = Path.Combine(Application.persistentDataPath, "SaveFolder" , storyName + "_save.json");
+        string saveDirectory = Path.Combine(Application.persistentDataPath, "SaveFolder");
+        if (!Directory.Exists(saveDirectory))
+        {
+            Directory.CreateDirectory(saveDirectory);
+        }
+        string path = Path.Combine(saveDirectory, storyName + "_save.json");
         File.WriteAllText(path, json);
     }
 
