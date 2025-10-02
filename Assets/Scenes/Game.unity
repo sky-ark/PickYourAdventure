@@ -6366,22 +6366,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   stories:
   - StoryName: Editor
+    ImageName: 
     StartingThumbnailId: EditorTest
     Thumbnails:
     - Id: EditorTest
-      Image: {fileID: -2872694499965855817, guid: ec5956a1af77826428c2ecb83536a565, type: 3}
+      ImageName: 
+      SfxName: 
+      MusicName: 
       Description: Tu vois une moto
       Choices:
       - Description: partir avec
         ThumbnailLinkId: PNG
-        IsEndingChoice: 0
+        NeededItemsId: []
+        GivenItemsId: []
+        TakenItemsId: []
     - Id: PNG
-      Image: {fileID: -5325690230357092924, guid: 858caf76d2b37214aaae308433bc2e16, type: 3}
+      ImageName: 
+      SfxName: 
+      MusicName: 
       Description: tu vois un arbre
       Choices:
       - Description: partir
         ThumbnailLinkId: partir
-        IsEndingChoice: 1
+        NeededItemsId: []
+        GivenItemsId: []
+        TakenItemsId: []
+    Items: []
   ThumbnailUI: {fileID: 1221977507}
 --- !u!4 &1897923609
 Transform:
@@ -6868,6 +6878,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2005334042}
   m_CullTransparentMesh: 1
+--- !u!1 &2006650044
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2006650046}
+  - component: {fileID: 2006650045}
+  m_Layer: 0
+  m_Name: InventoryManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2006650045
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2006650044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 229f6a9dd435ef549ab3fd293719d0b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InventoryManager
+--- !u!4 &2006650046
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2006650044}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1570.0641, y: 1125.7831, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -6876,3 +6930,4 @@ SceneRoots:
   - {fileID: 1897923609}
   - {fileID: 842288005}
   - {fileID: 1004151044}
+  - {fileID: 2006650046}
