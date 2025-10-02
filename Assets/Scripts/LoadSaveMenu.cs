@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LoadSaveMenu : MonoBehaviour
 {
@@ -8,7 +9,7 @@ public class LoadSaveMenu : MonoBehaviour
     public Transform LoadButtonContainer;
     public ThumbnailUI thumbnailUI;
     public GameObject StoryPanel;
-
+    public GameObject MainMenuPanel;
     private void OnEnable()
     {
         PopulateSaveButtons();
@@ -33,9 +34,14 @@ public class LoadSaveMenu : MonoBehaviour
             loadButtonObj.GetComponentInChildren<TMPro.TMP_Text>().text = storyName;
             loadButtonObj.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() =>
             {
-                LoadStory(file);
-                Debug.Log("Loaded story: " + storyName);
+                LoadStory(file); 
             });
+            Button deleteButton = loadButtonObj.transform.Find("DeleteSaveButton").GetComponent<Button>();
+            deleteButton.onClick.AddListener((() =>
+            {
+              File.Delete(file);
+              Destroy(loadButtonObj);
+            }));
         }
     }
 
@@ -57,8 +63,13 @@ public class LoadSaveMenu : MonoBehaviour
             this.gameObject.SetActive(false);
         }
         else {
-            Debug.LogError("Failed to load story progress.");
+            Debug.LogError("Failed to load story progress from " + storySavedName);
         }
     }
     
+    public void BackToMainMenu()
+    {
+        MainMenuPanel.SetActive(true);
+        this.gameObject.SetActive(false);
+    }
 }

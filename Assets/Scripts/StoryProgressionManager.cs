@@ -25,7 +25,8 @@ public class StoryProgressionManager : MonoBehaviour
 
     public static StorySaveData LoadProgress(string storyName)
     {
-        string path = Path.Combine(Application.persistentDataPath, "SaveFolder" , storyName + "_save.json");
+        string path = Path.Combine(Application.persistentDataPath, "SaveFolder" , storyName);
+        Debug.Log($"Loading save file from {path}");
         if (!File.Exists(path))
         {
             Debug.LogWarning($"Save file not found at {path}");

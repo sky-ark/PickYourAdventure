@@ -16,6 +16,7 @@ public class ThumbnailUI : MonoBehaviour {
     public GameObject StoryPanel;
     public Transform ChoiceContent;
     public Button SaveButton;
+    public GameObject MainMenuPanel;
 
     private Story _story;
 
@@ -72,6 +73,7 @@ public class ThumbnailUI : MonoBehaviour {
                     if (string.IsNullOrEmpty(choice.ThumbnailLinkId))
                     {
                         Debug.Log("End of the story");
+                        MainMenuPanel.SetActive(true);
                         StoryPanel.SetActive(false);
                         return;
                     }
@@ -118,6 +120,8 @@ public class ThumbnailUI : MonoBehaviour {
 
     public void BackToMenu()
     {
+        MainMenuPanel.SetActive(true);
         this.gameObject.SetActive(false);
+        
     }
 }
