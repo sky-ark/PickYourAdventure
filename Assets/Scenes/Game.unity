@@ -4523,7 +4523,7 @@ MonoBehaviour:
   LoadButtonContainer: {fileID: 1298943932}
   thumbnailUI: {fileID: 1221977507}
   StoryPanel: {fileID: 1221977505}
-  MainMenuPanel: {fileID: 0}
+  MainMenuPanel: {fileID: 831189026}
 --- !u!114 &1012015421
 MonoBehaviour:
   m_ObjectHideFlags: 0
