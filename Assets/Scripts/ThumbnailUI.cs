@@ -18,6 +18,8 @@ public class ThumbnailUI : MonoBehaviour {
     public AudioSource MusicSource;
     public Transform ChoiceContent;
     public Button SaveButton;
+    public Transform InventoryContent;
+    public GameObject InventoryItemPrefab;
     
     public GameObject StoryPanel;
     public GameObject MainMenuPanel;
@@ -51,7 +53,7 @@ public class ThumbnailUI : MonoBehaviour {
         _currentThumbnailId = thumbnail.Id;
         if (!string.IsNullOrEmpty(thumbnail.ImageName))
         {
-            Sprite sprite = LoadSprite(thumbnail.ImageName);
+            Sprite sprite = ImageLoader.LoadSprite(_story.StoryName, thumbnail.ImageName);
             Image.sprite = sprite;
             Image.enabled = true;
             Image.preserveAspect = true;
@@ -99,10 +101,11 @@ public class ThumbnailUI : MonoBehaviour {
                         SoundManager.StopSound();
                         return;
                     }
-
+                    
                     Thumbnail linkedThumbnail = _story.Thumbnails.Find(t => t.Id == choice.ThumbnailLinkId);
                     InventoryManager.Instance.AddItem(choice.GivenItemsId);
                     InventoryManager.Instance.RemoveItem(choice.TakenItemsId);
+                    RefreshInventory();
                     LoadThumbnail(linkedThumbnail);
                 });
             }
@@ -119,21 +122,19 @@ public class ThumbnailUI : MonoBehaviour {
         }
     }
 
-    public Sprite LoadSprite(string imageName)
+    public void RefreshInventory()
     {
-        string imagePath = Path.Combine(Application.persistentDataPath, _story.StoryName, imageName + ".png");
-        if (!File.Exists(imagePath))
+        foreach (Transform child in InventoryContent)
+            Destroy(child.gameObject);
+        foreach (string itemId in InventoryManager.Instance._items)
         {
-            Debug.Log("Image file not found at " + imagePath);
-            return null;
+            GameObject itemObj = Instantiate(InventoryItemPrefab, InventoryContent);
+            Item item = _story.Items.Find(i => i.Id == itemId);
+            Sprite itemSprite = ImageLoader.LoadSprite(_story.StoryName, item.IconName);
+            if (itemSprite != null) itemObj.GetComponent<Image>().sprite = itemSprite;
+            else itemObj.GetComponentInChildren<TMP_Text>().text = item.ItemName;
         }
-        byte[] imageBytes = File.ReadAllBytes(imagePath);
-        Texture2D texture = new Texture2D(2, 2);
-        if(!texture.LoadImage(imageBytes)) return null;
-        Rect rect = new Rect(0, 0, texture.width, texture.height);
-        return Sprite.Create(texture, rect, new Vector2(0.5f, 0.5f));
     }
-    
     
     private void ClearChoices() {
         foreach (Transform child in ChoiceContent) {

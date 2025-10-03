@@ -46,7 +46,7 @@ public class GameManager : MonoBehaviour
                     Debug.Log($"Image for thumbnail {thumbnail.Id} already exists at {imagePath}");
                     continue; // Skip saving if the image already exists
                 }
-                Sprite sprite = ThumbnailUI.LoadSprite(thumbnail.ImageName);
+                Sprite sprite = ImageLoader.LoadSprite(story.StoryName, thumbnail.ImageName);
                 if (sprite != null)
                 {
                     Texture2D tex = sprite.texture;

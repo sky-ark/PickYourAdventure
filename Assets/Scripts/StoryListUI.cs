@@ -37,12 +37,17 @@ public class StoryListUI : MonoBehaviour
         gameManager.LoadAllStories();
         foreach (var story in gameManager.stories)
         {
+            GameObject storyButton = Instantiate(storyButtonPrefab, storiesPanel);
+            // Load Story's image if exists
             if (!string.IsNullOrEmpty(story.ImageName))
             {
-                string imagePath = Path.Combine(Application.persistentDataPath, story.StoryName, story.ImageName);
-                
+                Sprite storySprite = ImageLoader.LoadSprite(story.StoryName, story.ImageName);  
+                Transform imageTransform = storyButton.transform.Find("StoryImage");
+                Image storyImage = imageTransform.GetComponent<Image>();
+                storyImage.sprite = storySprite;
+                storyImage.preserveAspect = true;
             }
-            GameObject storyButton = Instantiate(storyButtonPrefab, storiesPanel);
+            // Set Story's name on the button
             storyButton.GetComponentInChildren<TMP_Text>().text = story.StoryName;
             storyButton.GetComponent<Button>().onClick.AddListener(() =>
             {

@@ -28,10 +28,10 @@ public class Download : MonoBehaviour
             foreach (var file in json.AsArray)
             {
                 string name = file.Value["name"];
-                string downloardURL = file.Value["download_url"];
+                string downloadURL = file.Value["download_url"];
                 if (name.EndsWith(".json")) 
                 {
-                    storyURLs.Add(downloardURL);
+                    storyURLs.Add(downloadURL);
                 }
             }
 
