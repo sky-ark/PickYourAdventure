@@ -13,9 +13,11 @@ public class ThumbnailUI : MonoBehaviour {
     [Header("References")]
     public Image Image;
     public TMP_Text Description;
-    public GameObject StoryPanel;
+    public AudioSource MusicSource;
     public Transform ChoiceContent;
     public Button SaveButton;
+    
+    public GameObject StoryPanel;
     public GameObject MainMenuPanel;
 
     private Story _story;
@@ -55,7 +57,12 @@ public class ThumbnailUI : MonoBehaviour {
         {
             Image.sprite = null;
             Image.enabled = false;
-            Debug.LogWarning($"ThumbnailUI: Image is null for thumbnail {thumbnail.Id}");
+        }
+
+        if (!string.IsNullOrEmpty(thumbnail.MusicName))
+        {
+            MusicSource.clip = LoadAudioClip(thumbnail.MusicName);
+            MusicSource.Play();
         }
         if(Description != null) Description.text = thumbnail.Description;
         ClearChoices();
@@ -113,6 +120,20 @@ public class ThumbnailUI : MonoBehaviour {
         if(!texture.LoadImage(imageBytes)) return null;
         Rect rect = new Rect(0, 0, texture.width, texture.height);
         return Sprite.Create(texture, rect, new Vector2(0.5f, 0.5f));
+    }
+
+    public AudioClip LoadAudioClip(string soundName)
+    {
+        string soundPath = Path.Combine(Application.persistentDataPath, _story.StoryName, soundName + ".ogg");
+        if (!File.Exists(soundPath))
+        {
+            Debug.Log("Sound file not found at " + soundPath);
+            return null;
+        }
+        byte[] soundBytes = File.ReadAllBytes(soundPath);
+        AudioClip clip = AudioClip.Create("Sound", soundBytes.Length, soundBytes.Length, 1, false);
+        if (!clip.LoadAudioData()) return null;
+        return clip;
     }
     
     private void ClearChoices() {
