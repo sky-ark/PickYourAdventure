@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour
         File.WriteAllText(Path.Combine(filePath), json);
         foreach (var thumbnail in  story.Thumbnails)
         {
-            if (thumbnail.ImageName != null)
+            if (!string.IsNullOrEmpty(thumbnail.ImageName))
             {
                 string imagePath = Path.Combine(storyFolder, thumbnail.Id + ".png");
                 if (File.Exists(imagePath))

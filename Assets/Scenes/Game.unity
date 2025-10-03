@@ -8090,31 +8090,59 @@ MonoBehaviour:
   stories:
   - StoryName: Editor
     ImageName: 
-    StartingThumbnailId: EditorTest
+    StartingThumbnailId: pomme
     Thumbnails:
-    - Id: EditorTest
+    - Id: pomme
       ImageName: 
       SfxName: 
       MusicName: 
-      Description: Tu vois une moto
+      Description: Tu vois une pomme
       Choices:
-      - Description: partir avec
-        ThumbnailLinkId: PNG
+      - Description: la prendre
+        ThumbnailLinkId: voleur
+        NeededItemsId: []
+        GivenItemsId:
+        - pomme
+        TakenItemsId: []
+      - Description: la laisser
+        ThumbnailLinkId: voleur
         NeededItemsId: []
         GivenItemsId: []
         TakenItemsId: []
-    - Id: PNG
+    - Id: voleur
       ImageName: 
       SfxName: 
       MusicName: 
-      Description: tu vois un arbre
+      Description: 'On te crie au voleur ! '
       Choices:
-      - Description: partir
-        ThumbnailLinkId: partir
+      - Description: rendre la pomme
+        ThumbnailLinkId: rendu
+        NeededItemsId:
+        - pomme
+        GivenItemsId: []
+        TakenItemsId:
+        - pomme
+      - Description: dire que tu ne l'as pas et la retrouver
+        ThumbnailLinkId: pomme
         NeededItemsId: []
         GivenItemsId: []
         TakenItemsId: []
-    Items: []
+    - Id: rendu
+      ImageName: 
+      SfxName: 
+      MusicName: 
+      Description: le marchand te remercie
+      Choices:
+      - Description: Partir
+        ThumbnailLinkId: 
+        NeededItemsId: []
+        GivenItemsId: []
+        TakenItemsId: []
+    Items:
+    - Id: pomme
+      ItemName: pomme
+      IconName: 
+      Description: c est une pomme
   ThumbnailUI: {fileID: 1221977507}
 --- !u!4 &1897923609
 Transform:

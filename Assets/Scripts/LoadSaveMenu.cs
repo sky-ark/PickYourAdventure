@@ -59,6 +59,7 @@ public class LoadSaveMenu : MonoBehaviour
             StoryPanel.SetActive(true);
             thumbnailUI.Setup(story);
             Thumbnail startingThumbnail = story.Thumbnails.Find(t => t.Id == save.CurrentThumbnailId);
+            if(startingThumbnail == null) Debug.Log("No thumbnail found for " + story.StoryName);
             thumbnailUI.LoadThumbnail(startingThumbnail);
             this.gameObject.SetActive(false);
         }

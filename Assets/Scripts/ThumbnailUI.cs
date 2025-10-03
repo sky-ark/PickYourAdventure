@@ -19,6 +19,7 @@ public class ThumbnailUI : MonoBehaviour {
     public GameObject MainMenuPanel;
 
     private Story _story;
+    private String _currentThumbnailId;
 
     private void Start()
     {
@@ -29,7 +30,7 @@ public class ThumbnailUI : MonoBehaviour {
                 Debug.LogError("No story loaded to save progress.");
                 return;
             }
-            StoryProgressionManager.SaveProgress(_story.StoryName, _story.StartingThumbnailId, InventoryManager.Instance._items.ToList());
+            StoryProgressionManager.SaveProgress(_story.StoryName, _currentThumbnailId, InventoryManager.Instance._items.ToList());
             Debug.Log("Game progress saved.");
         });
     }
@@ -40,7 +41,9 @@ public class ThumbnailUI : MonoBehaviour {
         LoadThumbnail(firstThumbnail);
     }
 
-    public void LoadThumbnail(Thumbnail thumbnail) {
+    public void LoadThumbnail(Thumbnail thumbnail)
+    {
+        _currentThumbnailId = thumbnail.Id;
         if (!string.IsNullOrEmpty(thumbnail.ImageName))
         {
             Sprite sprite = LoadSprite(thumbnail.ImageName);
