@@ -1,9 +1,11 @@
 using System;
+using System.Collections;
 using System.IO;
 using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public class ThumbnailUI : MonoBehaviour {
@@ -20,6 +22,7 @@ public class ThumbnailUI : MonoBehaviour {
     public GameObject StoryPanel;
     public GameObject MainMenuPanel;
 
+    public SoundManager SoundManager;
     private Story _story;
     private String _currentThumbnailId;
 
@@ -58,13 +61,21 @@ public class ThumbnailUI : MonoBehaviour {
             Image.sprite = null;
             Image.enabled = false;
         }
-
+        // Handle music
         if (!string.IsNullOrEmpty(thumbnail.MusicName))
         {
-            MusicSource.clip = LoadAudioClip(thumbnail.MusicName);
-            MusicSource.Play();
+            SoundManager.StartCoroutine(SoundManager.PlayThumbnailMusic(_story.StoryName, thumbnail.MusicName));
         }
-        if(Description != null) Description.text = thumbnail.Description;
+        else {
+            SoundManager.StopSound();
+        }
+        //Handle SFX
+        if (!string.IsNullOrEmpty(thumbnail.SfxName))
+        {
+            SoundManager.StartCoroutine(SoundManager.PlayThumbnailSFX(_story.StoryName, thumbnail.SfxName));
+        }
+        
+        if(!string.IsNullOrEmpty(thumbnail.Description)) Description.text = thumbnail.Description;
         ClearChoices();
         foreach (Choice choice in thumbnail.Choices)
         {
@@ -85,6 +96,7 @@ public class ThumbnailUI : MonoBehaviour {
                         Debug.Log("End of the story");
                         MainMenuPanel.SetActive(true);
                         StoryPanel.SetActive(false);
+                        SoundManager.StopSound();
                         return;
                     }
 
@@ -121,20 +133,7 @@ public class ThumbnailUI : MonoBehaviour {
         Rect rect = new Rect(0, 0, texture.width, texture.height);
         return Sprite.Create(texture, rect, new Vector2(0.5f, 0.5f));
     }
-
-    public AudioClip LoadAudioClip(string soundName)
-    {
-        string soundPath = Path.Combine(Application.persistentDataPath, _story.StoryName, soundName + ".ogg");
-        if (!File.Exists(soundPath))
-        {
-            Debug.Log("Sound file not found at " + soundPath);
-            return null;
-        }
-        byte[] soundBytes = File.ReadAllBytes(soundPath);
-        AudioClip clip = AudioClip.Create("Sound", soundBytes.Length, soundBytes.Length, 1, false);
-        if (!clip.LoadAudioData()) return null;
-        return clip;
-    }
+    
     
     private void ClearChoices() {
         foreach (Transform child in ChoiceContent) {
@@ -146,6 +145,7 @@ public class ThumbnailUI : MonoBehaviour {
     {
         MainMenuPanel.SetActive(true);
         this.gameObject.SetActive(false);
+        SoundManager.StopSound();
         
     }
 }
