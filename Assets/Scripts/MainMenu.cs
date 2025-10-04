@@ -6,6 +6,7 @@ public class MainMenu : MonoBehaviour
     public GameObject StoryPanel;
     public GameObject CreateAdventurePanel;
     public GameObject LoadASavePanel;
+    public GameObject DownloadPanel;
     public void OnPlayButtonClicked()
     {
         MainMenuPanel.SetActive(false);
@@ -22,6 +23,12 @@ public class MainMenu : MonoBehaviour
     {
         MainMenuPanel.SetActive(false);
         LoadASavePanel.SetActive(true);
+    }
+
+    public void OnDownloadClicked()
+    {
+        MainMenuPanel.SetActive(false);
+        DownloadPanel.SetActive(true);
     }
     public void OnQuitButtonClicked()
     {
