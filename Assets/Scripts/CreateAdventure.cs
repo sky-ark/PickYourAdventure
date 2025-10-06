@@ -16,7 +16,6 @@ public class CreateAdventure : MonoBehaviour
     public Transform ThumbnailsContainer;
     public GameObject ItemInputPrefab;
     public GameObject ThumbnailInputPrefab;
-    
 
     [Header("Story Info")]
     public TMP_InputField StoryNameInputField;
@@ -28,7 +27,7 @@ public class CreateAdventure : MonoBehaviour
     public Button AddThumbnailButton;
     public Button SaveTheStoryButton;
     public Button QuitStoryCreationButton;
-    
+
     private List<ThumbnailInputLine> thumbnailLines = new List<ThumbnailInputLine>();
     private List<ItemInputLine> itemLines = new List<ItemInputLine>();
 
@@ -58,9 +57,8 @@ public class CreateAdventure : MonoBehaviour
         });
     }
 
-
     public void OnAddThumbnailClicked()
-    {   
+    {
         StoryNamePanel.SetActive(false);
         GameObject obj = Instantiate(ThumbnailInputPrefab, ThumbnailsContainer);
         ThumbnailInputLine til = obj.GetComponent<ThumbnailInputLine>();
@@ -96,31 +94,28 @@ public class CreateAdventure : MonoBehaviour
         string storyFolder = Path.Combine(Application.persistentDataPath, story.StoryName);
         if (!Directory.Exists(storyFolder))
             Directory.CreateDirectory(storyFolder);
-        
-        if (StoryImage.sprite != null)
-        {
-            // Sauver l'image
-            Texture2D tex = StoryImage.sprite.texture;
-            Texture2D readableTex = new Texture2D(tex.width, tex.height, TextureFormat.RGBA32, false);
-            RenderTexture rt = RenderTexture.GetTemporary(tex.width, tex.height);
-            Graphics.Blit(tex, rt);
-            RenderTexture.active = rt;
-            readableTex.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
-            readableTex.Apply();
-            RenderTexture.active = null;
-            RenderTexture.ReleaseTemporary(rt);
 
-            byte[] imageBytes = readableTex.EncodeToPNG();
-            string imagePath = Path.Combine(storyFolder, story.StoryName + ".png");
-            story.ImageName = story.StoryName + ".png";
-            File.WriteAllBytes(imagePath, imageBytes);
-            DestroyImmediate(readableTex);
+        // Sauver l'image principale
+        story.ImageName = SaveSpriteAsPng(StoryImage.sprite, storyFolder, story.StoryName);
+
+        // Items preparation
+        story.Items = new List<Item>();
+        foreach (var iil in itemLines)
+        {
+            Item item = new Item();
+            item.Id = iil.IDInput.text;
+            item.ItemName = iil.NameInput.text;
+            item.Description = iil.DescriptionInput.text;
+
+            // Gestion de l'image de l'item
+            item.IconName = SaveSpriteAsPng(iil.ItemImage.sprite, storyFolder, item.Id);
+
+            story.Items.Add(item);
         }
+
         story.Thumbnails = new List<Thumbnail>();
 
-
-
-        // Préparation des thumbnails
+        // Thumbnails preparation
         foreach (var til in thumbnailLines)
         {
             Thumbnail thumbnail = new Thumbnail();
@@ -129,25 +124,7 @@ public class CreateAdventure : MonoBehaviour
             thumbnail.Choices = til.GetChoices();
 
             // Gestion image (sauvegarde PNG)
-            if (til.ThumbnailImage.sprite != null)
-            {
-                // Sauver l'image
-                Texture2D tex = til.ThumbnailImage.sprite.texture;
-                Texture2D readableTex = new Texture2D(tex.width, tex.height, TextureFormat.RGBA32, false);
-                RenderTexture rt = RenderTexture.GetTemporary(tex.width, tex.height);
-                Graphics.Blit(tex, rt);
-                RenderTexture.active = rt;
-                readableTex.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
-                readableTex.Apply();
-                RenderTexture.active = null;
-                RenderTexture.ReleaseTemporary(rt);
-
-                byte[] imageBytes = readableTex.EncodeToPNG();
-                string imagePath = Path.Combine(storyFolder, thumbnail.Id + ".png");
-                thumbnail.ImageName = thumbnail.Id; 
-                File.WriteAllBytes(imagePath, imageBytes);
-                DestroyImmediate(readableTex);
-            }
+            thumbnail.ImageName = SaveSpriteAsPng(til.ThumbnailImage.sprite, storyFolder, thumbnail.Id);
 
             story.Thumbnails.Add(thumbnail);
         }
@@ -163,7 +140,7 @@ public class CreateAdventure : MonoBehaviour
         Debug.Log($"Story '{story.StoryName}' saved with {story.Thumbnails.Count} thumbnails.");
         StorySavedPanel.SetActive(true);
     }
-    
+
     public void OnQuitStoryCreationClicked()
     {
         StorySavedPanel.SetActive(false);
@@ -173,10 +150,32 @@ public class CreateAdventure : MonoBehaviour
         }
         thumbnailLines.Clear();
         StoryNameInputField.text = "";
-        MainMenuPanel.SetActive(true); 
+        MainMenuPanel.SetActive(true);
         CreateAdventurePanel.SetActive(false);
     }
-    
+
+    private string SaveSpriteAsPng(Sprite sprite, string folderPath, string fileNameWithoutExtension)
+    {
+        if (sprite == null) return null;
+
+        Texture2D tex = sprite.texture;
+        Texture2D readableTex = new Texture2D(tex.width, tex.height, TextureFormat.RGBA32, false);
+        RenderTexture rt = RenderTexture.GetTemporary(tex.width, tex.height);
+        Graphics.Blit(tex, rt);
+        RenderTexture.active = rt;
+        readableTex.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
+        readableTex.Apply();
+        RenderTexture.active = null;
+        RenderTexture.ReleaseTemporary(rt);
+
+        byte[] imageBytes = readableTex.EncodeToPNG();
+        string imageFileName = fileNameWithoutExtension + ".png";
+        string imagePath = Path.Combine(folderPath, imageFileName);
+        File.WriteAllBytes(imagePath, imageBytes);
+        DestroyImmediate(readableTex);
+
+        return imageFileName;
+    }
     public void SelectImage(System.Action<Sprite> onImageSelected)
     {
 #if UNITY_ANDROID || UNITY_IOS
@@ -198,5 +197,6 @@ public class CreateAdventure : MonoBehaviour
         }, "Select a PNG image", "image/png");
 #endif
     }
+    
     
 }
