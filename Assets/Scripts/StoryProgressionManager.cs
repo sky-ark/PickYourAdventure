@@ -19,7 +19,7 @@ public class StoryProgressionManager : MonoBehaviour
         {
             Directory.CreateDirectory(saveDirectory);
         }
-        string path = Path.Combine(saveDirectory, storyName + "_save.json");
+        string path = Path.Combine(saveDirectory, storyName + "_" + currentThumbnailId + "_save.json");
         File.WriteAllText(path, json);
     }
 
