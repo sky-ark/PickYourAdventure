@@ -58,29 +58,6 @@ public class ThumbnailInputLine : MonoBehaviour
     }
     public void SelectImage()
     {
-#if UNITY_ANDROID || UNITY_IOS
-        // Code spécifique pour Android et iOS
-        NativeGallery.GetImageFromGallery((path) =>
-        {
-            if (path != null)
-            {
-                // Crée un Texture2D à partir du chemin de l'image
-                Texture2D texture = NativeGallery.LoadImageAtPath(path, 512);
-                if (texture == null)
-                {
-                    Debug.Log("Couldn't load texture from " + path);
-                    return;
-                }
-
-                // Crée un Sprite à partir de la Texture2D
-                Rect rect = new Rect(0, 0, texture.width, texture.height);
-                Vector2 pivot = new Vector2(0.5f, 0.5f);
-                Sprite sprite = Sprite.Create(texture, rect, pivot);
-
-                // Assigne le Sprite à l'Image UI
-                ThumbnailImage.sprite = sprite;
-            }
-        }, "Select a PNG image", "image/png");
-#endif
+        parent.SelectImage((sprite => ThumbnailImage.sprite = sprite));
     }
 }

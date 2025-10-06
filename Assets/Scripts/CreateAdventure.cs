@@ -13,22 +13,32 @@ public class CreateAdventure : MonoBehaviour
     public GameObject StoryNamePanel;
     public GameObject ThumbnailsPanel;
     public GameObject StorySavedPanel;
-    public TMP_InputField StoryNameInputField;
     public Transform ThumbnailsContainer;
+    public GameObject ItemInputPrefab;
     public GameObject ThumbnailInputPrefab;
+    
+
+    [Header("Story Info")]
+    public TMP_InputField StoryNameInputField;
+    public Image StoryImage;
 
     [Header("Actions")]
-    public Button ValidateNameButton;
+    public Button SelectStoryImageButton;
+    public Button AddItemButton;
+    public Button AddThumbnailButton;
     public Button SaveTheStoryButton;
     public Button QuitStoryCreationButton;
     
     private List<ThumbnailInputLine> thumbnailLines = new List<ThumbnailInputLine>();
+    private List<ItemInputLine> itemLines = new List<ItemInputLine>();
 
     void Start()
     {
-        ValidateNameButton.onClick.AddListener(OnNameValidationClicked);
         SaveTheStoryButton.onClick.AddListener(OnSaveTheStoryClicked);
         QuitStoryCreationButton.onClick.AddListener(OnQuitStoryCreationClicked);
+        SelectStoryImageButton.onClick.AddListener(OnSelectStoryImage);
+        AddThumbnailButton.onClick.AddListener(OnAddThumbnailClicked);
+        AddItemButton.onClick.AddListener(AddItem);
     }
 
     private void OnEnable()
@@ -36,18 +46,40 @@ public class CreateAdventure : MonoBehaviour
         StoryNamePanel.SetActive(true);
     }
 
-    public void OnNameValidationClicked()
+    public void OnSelectStoryImage()
     {
-        StoryNamePanel.SetActive(false);
-        OnAddThumbnailClicked();
+        SelectImage((sprite) =>
+        {
+            if (sprite != null)
+            {
+                StoryImage.sprite = sprite;
+                StoryImage.preserveAspect = true;
+            }
+        });
     }
 
+
     public void OnAddThumbnailClicked()
-    {
+    {   
+        StoryNamePanel.SetActive(false);
         GameObject obj = Instantiate(ThumbnailInputPrefab, ThumbnailsContainer);
         ThumbnailInputLine til = obj.GetComponent<ThumbnailInputLine>();
         til.Setup(this);
         thumbnailLines.Add(til);
+    }
+
+    public void AddItem()
+    {
+        StoryNamePanel.SetActive(false);
+        GameObject obj = Instantiate(ItemInputPrefab, ThumbnailsContainer);
+        ItemInputLine iil = obj.GetComponent<ItemInputLine>();
+        iil.Setup(this);
+        itemLines.Add(iil);
+    }
+    public void RemoveItemLine(ItemInputLine line)
+    {
+        itemLines.Remove(line);
+        Destroy(line.gameObject);
     }
 
     public void RemoveThumbnailLine(ThumbnailInputLine line)
@@ -60,11 +92,33 @@ public class CreateAdventure : MonoBehaviour
     {
         Story story = new Story();
         story.StoryName = StoryNameInputField.text;
-        story.Thumbnails = new List<Thumbnail>();
 
         string storyFolder = Path.Combine(Application.persistentDataPath, story.StoryName);
         if (!Directory.Exists(storyFolder))
             Directory.CreateDirectory(storyFolder);
+        
+        if (StoryImage.sprite != null)
+        {
+            // Sauver l'image
+            Texture2D tex = StoryImage.sprite.texture;
+            Texture2D readableTex = new Texture2D(tex.width, tex.height, TextureFormat.RGBA32, false);
+            RenderTexture rt = RenderTexture.GetTemporary(tex.width, tex.height);
+            Graphics.Blit(tex, rt);
+            RenderTexture.active = rt;
+            readableTex.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
+            readableTex.Apply();
+            RenderTexture.active = null;
+            RenderTexture.ReleaseTemporary(rt);
+
+            byte[] imageBytes = readableTex.EncodeToPNG();
+            string imagePath = Path.Combine(storyFolder, story.StoryName + ".png");
+            story.ImageName = story.StoryName + ".png";
+            File.WriteAllBytes(imagePath, imageBytes);
+            DestroyImmediate(readableTex);
+        }
+        story.Thumbnails = new List<Thumbnail>();
+
+
 
         // Préparation des thumbnails
         foreach (var til in thumbnailLines)
@@ -122,4 +176,27 @@ public class CreateAdventure : MonoBehaviour
         MainMenuPanel.SetActive(true); 
         CreateAdventurePanel.SetActive(false);
     }
+    
+    public void SelectImage(System.Action<Sprite> onImageSelected)
+    {
+#if UNITY_ANDROID || UNITY_IOS
+        NativeGallery.GetImageFromGallery((path) =>
+        {
+            if (path != null)
+            {
+                Texture2D texture = NativeGallery.LoadImageAtPath(path, 512);
+                if (texture == null)
+                {
+                    Debug.Log("Couldn't load texture from " + path);
+                    return;
+                }
+                Rect rect = new Rect(0, 0, texture.width, texture.height);
+                Vector2 pivot = new Vector2(0.5f, 0.5f);
+                Sprite sprite = Sprite.Create(texture, rect, pivot);
+                onImageSelected?.Invoke(sprite);
+            }
+        }, "Select a PNG image", "image/png");
+#endif
+    }
+    
 }
