@@ -6,7 +6,9 @@ public class ChoiceInputLine : MonoBehaviour
 {
   public TMP_InputField ChoiceDescriptionInput;
   public TMP_InputField ChoiceThumbnailLinkIdInput;
-  public Toggle IsEndingChoiceToggle;
+  public TMP_InputField ChoiceNeededItemInput;
+  public TMP_InputField ChoiceGivenItemInput;
+  public TMP_InputField ChoiceTakenItemInput;
   public Button RemoveChoiceButton;
   
   private ThumbnailInputLine parent;

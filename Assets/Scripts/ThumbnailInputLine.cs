@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -50,11 +51,26 @@ public class ThumbnailInputLine : MonoBehaviour
             {
                 Description = line.ChoiceDescriptionInput.text,
                 ThumbnailLinkId = line.ChoiceThumbnailLinkIdInput.text,
+                NeededItemsId = ParseInputToList(line.ChoiceNeededItemInput.text),
+                GivenItemsId = ParseInputToList(line.ChoiceGivenItemInput.text),
+                TakenItemsId = ParseInputToList(line.ChoiceTakenItemInput.text),
             };
             result.Add(choice);
         }
 
         return result;
+    }
+    
+    private List<string> ParseInputToList(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+            return new List<string>();
+        // Seperate by comma and trim spaces
+        return new List<string>(
+            input.Split(',')
+                .Select(s => s.Trim())
+                .Where(s => !string.IsNullOrEmpty(s))
+        );
     }
     public void SelectImage()
     {
