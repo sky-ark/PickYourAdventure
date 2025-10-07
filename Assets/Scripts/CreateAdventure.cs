@@ -10,8 +10,6 @@ public class CreateAdventure : MonoBehaviour
     [Header("Panels & Containers")]
     public GameObject CreateAdventurePanel;
     public GameObject MainMenuPanel;
-    public GameObject StoryNamePanel;
-    public GameObject ThumbnailsPanel;
     public GameObject StorySavedPanel;
     public Transform ThumbnailsContainer;
     public GameObject ItemInputPrefab;
@@ -39,12 +37,7 @@ public class CreateAdventure : MonoBehaviour
         AddThumbnailButton.onClick.AddListener(OnAddThumbnailClicked);
         AddItemButton.onClick.AddListener(AddItem);
     }
-
-    private void OnEnable()
-    {
-        StoryNamePanel.SetActive(true);
-    }
-
+    
     public void OnSelectStoryImage()
     {
         SelectImage((sprite) =>
@@ -59,7 +52,6 @@ public class CreateAdventure : MonoBehaviour
 
     public void OnAddThumbnailClicked()
     {
-        StoryNamePanel.SetActive(false);
         GameObject obj = Instantiate(ThumbnailInputPrefab, ThumbnailsContainer);
         ThumbnailInputLine til = obj.GetComponent<ThumbnailInputLine>();
         til.Setup(this);
@@ -68,7 +60,6 @@ public class CreateAdventure : MonoBehaviour
 
     public void AddItem()
     {
-        StoryNamePanel.SetActive(false);
         GameObject obj = Instantiate(ItemInputPrefab, ThumbnailsContainer);
         ItemInputLine iil = obj.GetComponent<ItemInputLine>();
         iil.Setup(this);
