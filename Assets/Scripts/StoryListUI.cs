@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using Object = System.Object;
 
 public class StoryListUI : MonoBehaviour
 {
@@ -51,7 +52,9 @@ public class StoryListUI : MonoBehaviour
             storyButton.GetComponentInChildren<TMP_Text>().text = story.StoryName;
             storyButton.GetComponent<Button>().onClick.AddListener(() =>
             {
+                InventoryManager.Instance.ClearInventory();
                 gameManager.ThumbnailUI.Setup(story);
+                gameManager.ThumbnailUI.RefreshInventory();
                 StoryPanel.SetActive(true);
             });
             Button deleteButton = storyButton.transform.Find("DeleteButton").GetComponent<Button>();
